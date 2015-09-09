@@ -21,6 +21,7 @@
  * @package    local
  * @subpackage reservasalas
  * @copyright  2013 Marcelo Epuyao
+ * @copyright  2015 Eduardo Aguirrebeña (eaguirrebena@alumnos.uai.cl)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__) . '/../../config.php'); //obligatorio
@@ -70,10 +71,10 @@ if($action == "see"){
 	$max = 15;
 	$page = optional_param('page', 0, PARAM_INT);
 	//$bokkings = $DB->get_records('bookingrooms_bookings');
-	$bookings = $DB->get_records_sql('select * from {bookingrooms_bookings} where active = 1 order by date_bookings desc');
+	$bookings = $DB->get_records_sql('SELECT * from {bookingrooms_bookings} WHERE active = 1 order by date_bookings desc');
 	$count = count($bookings);
 	$totalpages = ceil($count/$max);
-	$table = tables::allbookingdata($reservas,$max, $page);
+	$table = tables::AlldataReservations($reservas,$max, $page);
 }
 
 
