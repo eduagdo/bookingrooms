@@ -22,7 +22,8 @@
 * @copyright  2014 Francisco García Ralph (francisco.garcia.ralph@gmail.com)
 * 				   Nicolás Bañados Valladares (nbanados@alumnos.uai.cl)
 *             2015 Mihail Pozarski Rada (mipozarski@alumnos.uai.cl)
-*             2015 Sebastian Riveros (sriveros@alumnos.uai.cl)
+*             		Sebastian Riveros (sriveros@alumnos.uai.cl)
+*             		Eduardo Aguirrebeña (eaguirrebena@alumnos.uai.cl)
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 //Form used in blocked.php
@@ -71,7 +72,7 @@ class formeditplaces extends moodleform {
 		$placeid = $instance['idplace'];
 
 		$mform->addElement('text', 'name',get_string('campusname', 'local_bookingrooms'));
-		$mform->setType('place', PARAM_TEXT);
+		$mform->setType('name', PARAM_TEXT);
 		
 		$mform->addElement('hidden','action','edit');
 		$mform->setType('action', PARAM_TEXT);

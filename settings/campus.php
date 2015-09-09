@@ -74,24 +74,27 @@ if($action == 'edit'){
 		print_error(get_string('noexistcampus','local_bookingrooms'));	
     	$action = "view";
 }else{
-	if( $campus = $DB->get_record('bookingrooms_campus', array('id'=>$placeid)) ){
-	   $editform = new formeditplaces(null, array( 'idplace'=>$placeid) );
-	   $defaultdata = new stdClass();
-	   $defaultdata->name = $campus->name;
-	   $editform->set_data($defaultdata);
-	   if( $editform->is_cancelled() ){
-	   	$action = "view";
-	   } 
-	   else if ($fromform = $editform->get_data()) {
-            $record = new stdClass();
-	   	    $record->id = $fromform->idplace;
+	$campus = $DB->get_record('bookingrooms_campus', array('id'=>$placeid));
+	if(!$campus  ){
+		print_error(get_string('noexist','local_bookingrooms'));
+		$action="view";
+		
+	}else{
+		$editform = new formeditplaces(null, array( 'idplace'=>$placeid) );
+		$defaultdata = new stdClass();
+		$defaultdata->name = $campus->name;
+		$editform->set_data($defaultdata);
+		if( $editform->is_cancelled() ){
+			$action = "view";
+		}
+		else if ($fromform = $editform->get_data()) {
+			$record = new stdClass();
+			$record->id = $fromform->idplace;
 			$record->name = $fromform->name;
 			$DB->update_record('bookingrooms_campus', $record);
 			$action = "view";
-	   }
-	}else{
-		print_error(get_string('noexist','local_bookingrooms'));
-		$action="view";
+		}
+		
 	}
 }
 }
