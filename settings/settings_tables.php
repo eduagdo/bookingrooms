@@ -230,9 +230,14 @@ class tables{
 				}else if($reservation->confirmed==0){
 					$status = "Pending";
 				}
-				$editurl_room = new moodle_url("historial.php", array("action"=>"commentary", "reservation"=>$reservation->id ));
+				$editurl_room = new moodle_url("historial.php", 
+						array("action"=>"commentary", "reservation"=>$reservation->id ));
+				
 				$editicon_room = new pix_icon("t/edit", get_string("edit", "local_bookingrooms"));
-				$editaction_room = $OUTPUT->action_icon($editurl_room, $editicon_room, new confirm_action(get_string("areyousureaddcomments", "local_bookingrooms")));
+				
+				$editaction_room = $OUTPUT->action_icon($editurl_room, $editicon_room, 
+						new confirm_action(get_string("areyousureaddcomments", "local_bookingrooms")));
+				
 				if($reservation->commentary_admin != NULL){
 					$commentary = $reserva->commentary_admin;
 				}
@@ -242,12 +247,24 @@ class tables{
 
 				$moduleName = $DB -> get_record("bookingrooms_modules", array("id" => $reservation->module));
 				
-				$table->data[] = array($campus->name, $building->name, $room->name, $reservation->date_reservation,$reservation->date_creation, $student->username, $moduleName->nsmr_module, $status,$reservation->ip , $room->name_pc, $reservation->coment_student, $commentary );
+				$creationdate = date("Y-m-d H:i:s",$reservation->date_creation);
+				$table->data[] = array($campus->name, 
+						$building->name, 
+						$room->name, 
+						$reservation->date_reservation,
+						$creationdate,
+						$student->username, 
+						$moduleName->nsmr_module, 
+						$status,$reservation->ip , 
+						$room->name_pc, 
+						$reservation->coment_student, 
+						$commentary );
 					
 
 			}
 			$count++;
 		}
+		$table->size = array('5%', '5%','5%','12%','12%','10%','8%','10%','8%','8%','12%','3%');
 
 		return $table;
 
