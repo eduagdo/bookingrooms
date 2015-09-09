@@ -23,6 +23,7 @@
 * @copyright  2014 Francisco García Ralph (francisco.garcia.ralph@gmail.com)
 * 					Nicolás Bañados Valladares (nbanados@alumnos.uai.cl)
 *             2015 Sebastian Riveros(sriveros@alumnos.uai.cl)
+*             		Eduardo Aguirrebeña (eaguirrebena@alumnos.uai.cl)
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 require_once(dirname(dirname(__FILE__)) . '/../../config.php');; //obligatorio
@@ -75,22 +76,23 @@ if($action == 'create'){
 //Implementation of action  edit
 // edit an existing resource
 if($action == 'edit'){
-	$idresource= optional_param('idresource','0',PARAM_INT );
+	$idresource= optional_param('idresource','1',PARAM_INT );
 	$resourceid= optional_param('resourceid','0',PARAM_INT );
-	$prevaction = optional_param('prevaction', 'view', PARAM_TEXT);
 	$resourcename = $DB->get_record('bookingrooms_resources', array('id'=>$idresource));
-	$record = $DB->get_record('bookingrooms_resources', array('id'=>$idresource));
 	$editform = new formResourcesEdit(null,
-			array('prevaction'=>$prevaction, 'idresource'=>$idresource, 'resourcename'=>$resourcename->name));
+			array('idresource'=>$idresource,
+					'resourcename'=>$resourcename->name));
+	
 	if ($editform->is_cancelled()) {
-		$action = $prevaction;
-	}else if ($fromform = $editform->get_data()) {
+		$action = "view";
+	}
+	else if ($fromform = $editform->get_data()) {
 		if($resourceid!=0){
 	// The resource is edited, its name is changed by one nonexistent
 			$record = $DB->get_record('bookingrooms_resources', array('id'=>$resourceid));
 			$record->name = $fromform->resource;
 			$DB->update_record('bookingrooms_resources', $record);
-			$action = $prevaction;
+			$action = "view";
 		}
 	}
 }

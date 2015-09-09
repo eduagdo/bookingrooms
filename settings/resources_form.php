@@ -22,7 +22,8 @@
  * @copyright  2014 Francisco García Ralph (francisco.garcia.ralph@gmail.com)
  * 				   Nicolás Bañados Valladares (nbanados@alumnos.uai.cl)
  *             2015 Mihail Pozarski Rada (mipozarski@alumnos.uai.cl)
- *             2015 Sebastian Riveros (sriveros@alumnos.uai.cl)
+ *             		Sebastian Riveros (sriveros@alumnos.uai.cl)
+ *             		Eduardo Aguirrebeña (eaguirrebena@alumnos.uai.cl)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 //Form used in blocked.php
@@ -65,7 +66,6 @@ class formResourcesEdit extends moodleform {
 		$mform =& $this->_form; // Don't forget the underscore!
 		$instance = $this->_customdata;
 		$resourceid = $instance['idresource'];
-		$prevaction=$instance['prevaction'];
 		$name = $instance['resourcename'];
 		$idres = optional_param('idresource', NULL, PARAM_RAW);
 
@@ -76,8 +76,6 @@ class formResourcesEdit extends moodleform {
 		$mform->setType('action', PARAM_TEXT);
 		$mform->addElement('hidden','resourceid',$resourceid);
 		$mform->setType('resourceid', PARAM_INT);
-		$mform->addElement('hidden','prevaction',$prevaction);
-		$mform->setType('prevaction', PARAM_TEXT);
 		$mform->addElement('hidden','idres',$idres);
 		$mform->setType('idres', PARAM_INT);
 		$this->add_action_buttons(true,get_string('changeresource', 'local_bookingrooms'));
