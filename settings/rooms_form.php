@@ -22,13 +22,15 @@
  * @copyright  2014 Francisco García Ralph (francisco.garcia.ralph@gmail.com)
  * 				   Nicolás Bañados Valladares (nbanados@alumnos.uai.cl)
  *             2015 Mihail Pozarski Rada (mipozarski@alumnos.uai.cl)
- *             2015 Sebastian Riveros (sriveros@alumnos.uai.cl)
+ *             		Sebastian Riveros (sriveros@alumnos.uai.cl)
+ *             		Eduardo Aguirrebeña (eaguirrebena@alumnos.uai.cl)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 //Form used in blocked.php
 //Ask for a institutional email to get a module blocked
 require_once(dirname(dirname(__FILE__)) . '/../../config.php'); //mandatory
 require_once($CFG->libdir.'/formslib.php');
+
 class createRoomsTwo extends moodleform {
 	function definition() {
 		global $CFG, $DB;
@@ -106,26 +108,33 @@ class createrooms extends moodleform {
 			
 		for($i=0;$i<$numberofrooms;$i++){
 			$resourcesArray=array();
-			foreach($seeResources as $seeResource){
-				$nresources = $seeResource->id;
-				$checkName=$i.$nresources;
-				$resourcesArray[] =& $mform->createElement('advcheckbox', $checkName, $seeResource->name, $seeResource->name.' ', array('group' => 1), array(0, 1));
-			}
+			
+			
 			$nroom =strval("room$i");
 			$npc = "pc$i";
 			$ntype = "cap$i";
 			$nres= "res$i";
 			$value=101+$i;
-			$mform->addElement('text', $nroom, get_string('roomsname', 'local_bookingrooms'), array('value' => $value )); //***
-			$mform->addRule($nroom, get_string('roomsname', 'local_bookingrooms'), 'required'); // *******
+			$mform->addElement('text', $nroom, get_string('roomsname', 'local_bookingrooms'),
+					array('value' => $value ));
+			$mform->addRule($nroom, get_string('roomsname', 'local_bookingrooms'), 'required');
 			$mform->setType($nroom, PARAM_INT);
 			$mform->addElement('text', $ntype, get_string('roomcapacity', 'local_bookingrooms').': ');
 			$mform->setType($ntype, PARAM_INT);
 			$mform->setDefault($ntype,0);
+			if(count($seeResources)>0){
+			foreach($seeResources as $seeResource){
+				$nresources = $seeResource->id;
+				$checkName=$i.$nresources;
+				$resourcesArray[] =& $mform->createElement('advcheckbox', $checkName, $seeResource->name, $seeResource->name.' ', array('group' => 1), array(0, 1));
+			}
 			$mform->AddGroup($resourcesArray,'', get_string('resources', 'local_bookingrooms').': ');
-			$mform->addElement('text', $npc ,get_string('pcname', 'local_bookingrooms').': ', array('value' => 'Pc de room '.($i+1)));
+			}
+			
+			$mform->addElement('text', $npc ,get_string('pcname', 'local_bookingrooms').': ',
+					array('value' => 'Pc de room '.($i+1)));
 			$mform->setType($npc, PARAM_INT);
-			$mform->addElement('static'); //to create a space between the pc :)
+			$mform->addElement('static');
 		}
 		$mform->addElement('hidden', 'typeRoom', $roomtype);
 		$mform->setType('typeRoom', PARAM_INT);
@@ -196,17 +205,7 @@ class editroom extends moodleform{
 
 		$resourcesArray=array();
 		$seeResources = $DB->get_records('bookingrooms_resources');
-
-		foreach($seeResources as $seeResource){
-			$nresources = $seeResource->id;
-			$checkName=$nresources;
-
-			$resourcesArray[] =& $mform->createElement('advcheckbox', $checkName, $seeResource->name, $seeResource->name.' ');
-			if($DB->get_records('bookingrooms_roomresource', array('rooms_id'=>$idroom, 'resources_id'=>$seeResource->id))!=null){
-					
-				$mform->setDefault($checkName, '1');
-			}
-		}
+		
 
 		$mform->addElement('text', 'changenameroom', get_string('roomsname', 'local_bookingrooms').': ', array('value' => $nameroom->name));
 		$mform->setType('changenameroom', PARAM_TEXT);
@@ -223,7 +222,21 @@ class editroom extends moodleform{
 		$mform->setType('roomType', PARAM_INT);
 		$mform->addElement('text', 'cap', get_string('roomcapacity', 'local_bookingrooms').': ', array('value'=>$nameroom->capaciy));
 		$mform->setType('cap', PARAM_INT);
-		$mform->AddGroup($resourcesArray,'', get_string('resources', 'local_bookingrooms').': ');
+		
+		if(count($seeResources)>0){
+			foreach($seeResources as $seeResource){
+				$nresources = $seeResource->id;
+				$checkName=$nresources;
+		
+				$resourcesArray[] =& $mform->createElement('advcheckbox', $checkName, $seeResource->name, $seeResource->name.' ');
+				if($DB->get_records('bookingrooms_roomresource', array('rooms_id'=>$idroom, 'resources_id'=>$seeResource->id))!=null){
+						
+					$mform->setDefault($checkName, '1');
+				}
+			}
+			$mform->AddGroup($resourcesArray,'', get_string('resources', 'local_bookingrooms').': ');
+		}
+		
 		$mform->setType('action', PARAM_TEXT);
 		$mform->addElement('hidden','building',$buildingid);
 		$mform->setType('building', PARAM_INT);
